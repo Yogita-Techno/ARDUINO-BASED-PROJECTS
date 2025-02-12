@@ -1,0 +1,75 @@
+// Motor control pins
+const int motorA1 = 6;   // IN1 for motor A (Left Motor)
+const int motorA2 = 7;   // IN2 for motor A (Left Motor)
+const int motorB1 = 8;   // IN3 for motor B (Right Motor)
+const int motorB2 = 9;   // IN4 for motor B (Right Motor)
+
+// IR sensor pins
+const int leftSensor = A0;  
+const int rightSensor = A1; 
+
+void setup() {
+  pinMode(motorA1, OUTPUT);
+  pinMode(motorA2, OUTPUT);
+  pinMode(motorB1, OUTPUT);
+  pinMode(motorB2, OUTPUT);
+
+  // Set sensor pins as input
+  pinMode(leftSensor, INPUT);
+  pinMode(rightSensor, INPUT);
+}
+
+void loop() {
+  int leftValue = analogRead(leftSensor);  
+  int rightValue = analogRead(rightSensor); 
+  
+  Serial.print("Left Sensor: ");
+  Serial.print(leftValue);
+  Serial.print("  Right Sensor: ");
+  Serial.println(rightValue);
+  
+  if (leftValue < 500 && rightValue < 500) {
+    moveForward();
+  }
+  else if (leftValue < 500 && rightValue > 500) {
+    turnLeft();
+  }
+  else if (rightValue < 500 && leftValue > 500) {
+    turnRight();
+  }
+  else {
+    stopMotors();
+  }
+
+  delay(100);
+
+// Function to move forward
+void moveForward() {
+  digitalWrite(motorA1, HIGH);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
+}
+
+// Function to turn left
+void turnLeft() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, LOW);  
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);  
+
+// Function to turn right
+void turnRight() {
+  digitalWrite(motorA1, HIGH);
+  digitalWrite(motorA2, LOW);  
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, LOW);  
+}
+
+// Function to stop both motors
+void stopMotors() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, LOW); 
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, LOW);  
+}
