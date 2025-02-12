@@ -1,0 +1,26 @@
+// Pin configuration
+const int soundSensorPin = 7;   
+const int ledPins[] = {2, 3, 4, 5, 6, 8};  // LED pins (2 to 8)
+const int numLeds = 6;         
+
+void setup() {
+  pinMode(soundSensorPin, INPUT);
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soundValue = digitalRead(soundSensorPin);
+  Serial.print("Sound Detected: ");
+  Serial.println(soundValue);
+  if (soundValue == HIGH) {
+    for (int i = 0; i < numLeds; i++) {
+      digitalWrite(ledPins[i], HIGH);   
+      delay(200); 
+      digitalWrite(ledPins[i], LOW);    
+    }
+  }
+  delay(200);  
+}
