@@ -1,0 +1,47 @@
+#include <Servo.h>
+
+const int trigPin = 9;
+const int echoPin = 10;
+const int buzzerPin = 8;
+const int servoPin = 6;
+Servo servo;
+
+long duration;
+int distance;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  servo.attach(servoPin);
+  servo.write(0);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+  distance = duration * 0.0344 / 2;
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (distance < 10) {
+    servo.write(90);
+    
+    digitalWrite(buzzerPin, HIGH);
+    
+    delay(2000);
+    servo.write(0);
+    
+    digitalWrite(buzzerPin, LOW);
+  }
+  delay(100);
+}
