@@ -1,0 +1,35 @@
+#include <Servo.h>
+
+// Pin configuration
+const int rainSensorPin = 2;  
+const int buzzerPin = 8;     
+const int servoPin = 9;      
+
+Servo rainServo;
+
+void setup() {
+  pinMode(rainSensorPin, INPUT);  t
+  pinMode(buzzerPin, OUTPUT);    
+
+  rainServo.attach(servoPin);
+  
+  rainServo.write(0);  // Servo at 0 degrees (closed position, adjust as needed)
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  int rainState = digitalRead(rainSensorPin);
+  
+  if (rainState == HIGH) {  // If rain is detected (sensor output is HIGH)
+    digitalWrite(buzzerPin, HIGH);  // Turn on the buzzer
+    rainServo.write(90);  // Move servo to 90 degrees (open position, adjust as needed)
+    Serial.println("Rain detected! Buzzer ON and Servo OPEN");
+  } else {  // If no rain is detected
+    digitalWrite(buzzerPin, LOW);  // Turn off the buzzer
+    rainServo.write(0);  // Move servo back to 0 degrees (closed position)
+    Serial.println("No rain. Buzzer OFF and Servo CLOSED");
+  }
+  
+  delay(1000); 
+}
