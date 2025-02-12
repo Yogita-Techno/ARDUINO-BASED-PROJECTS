@@ -1,0 +1,44 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x3F, 16, 2);  
+void setup() {
+  // Initialize the LCD
+  lcd.begin(16, 2);
+  lcd.backlight(); 
+  
+  // Display a welcome message
+  lcd.setCursor(0, 0);  
+  lcd.print("Welcome to"); 
+  lcd.setCursor(0, 1);  
+  lcd.print("Smart Notice!"); 
+  delay(2000); 
+  
+  // Clear the LCD screen
+  lcd.clear();
+  
+  // Display another message
+  lcd.setCursor(0, 0);
+  lcd.print("Notice: Meeting");
+  lcd.setCursor(0, 1);
+  lcd.print("at 3 PM today.");
+  delay(3000); 
+  lcd.clear();
+}
+
+void loop() {
+  lcd.setCursor(0, 0);
+  lcd.print("YOGITA_TECHNO");
+  lcd.setCursor(0, 1);
+  lcd.print("TRAINER");
+  delay(3000); 
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("ENGINEER");
+  lcd.setCursor(0, 1);
+  lcd.print("B.TECH");
+  delay(3000);  
+
+  lcd.clear();
+}
