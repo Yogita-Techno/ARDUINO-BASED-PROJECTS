@@ -1,0 +1,43 @@
+// Pin configuration
+const int waterLevelPin = A0;   
+const int greenLedPin = 3;     
+const int yellowLedPin = 4;     
+const int redLedPin = 5;      
+const int buzzerPin = 8;       
+
+void setup() {
+  pinMode(greenLedPin, OUTPUT);
+  pinMode(yellowLedPin, OUTPUT);
+  pinMode(redLedPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  int waterLevel = analogRead(waterLevelPin);
+
+  Serial.print("Water Level: ");
+  Serial.println(waterLevel);
+
+  if (waterLevel < 341) {  // Low water level (0 to 341 range)
+    digitalWrite(greenLedPin, HIGH);   
+    digitalWrite(yellowLedPin, LOW);  
+    digitalWrite(redLedPin, LOW);    
+    digitalWrite(buzzerPin, LOW);    
+  }
+  else if (waterLevel >= 341 && waterLevel < 682) { 
+    digitalWrite(greenLedPin, LOW);  
+    digitalWrite(yellowLedPin, HIGH);  
+    digitalWrite(redLedPin, LOW);     
+    digitalWrite(buzzerPin, LOW);   
+  }
+  else {  // High water level (682 to 1023)
+    digitalWrite(greenLedPin, LOW);  
+    digitalWrite(yellowLedPin, LOW);   
+    digitalWrite(redLedPin, HIGH);    
+    digitalWrite(buzzerPin, HIGH);    
+  }
+
+  delay(1000); 
+}
