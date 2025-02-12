@@ -1,0 +1,28 @@
+// Pin Definitions
+const int mq2Pin = A0;       
+const int buzzerPin = 8;    
+const int relayPin = 9;     
+
+int smokeThreshold = 400;    
+
+void setup() {
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(relayPin, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  int smokeLevel = analogRead(mq2Pin);
+  
+  Serial.print("Smoke Level: ");
+  Serial.println(smokeLevel);
+  if (smokeLevel > smokeThreshold) {
+    digitalWrite(buzzerPin, HIGH);   
+    digitalWrite(relayPin, HIGH);    
+  } else {
+    digitalWrite(buzzerPin, LOW);     
+    digitalWrite(relayPin, LOW);      
+  }
+  delay(500);
+}
