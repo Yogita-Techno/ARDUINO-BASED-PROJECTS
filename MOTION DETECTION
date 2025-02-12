@@ -1,0 +1,28 @@
+// Pin configuration
+const int pirPin = 7;         
+const int buzzerPin = 8;     
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  
+  pinMode(buzzerPin, OUTPUT);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  int motionDetected = digitalRead(pirPin);
+  
+  Serial.print("PIR Sensor: ");
+  Serial.println(motionDetected);
+  
+  if (motionDetected == HIGH) { 
+    digitalWrite(buzzerPin, HIGH);
+    Serial.println("Motion Detected! Buzzer ON");
+  } else { 
+    digitalWrite(buzzerPin, LOW);
+    Serial.println("No Motion. Buzzer OFF");
+  }
+
+  delay(500);  
+}
