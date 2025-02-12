@@ -1,0 +1,41 @@
+// Pin Definitions
+const int irSensor1Pin = 2; 
+const int irSensor2Pin = 3;  
+const int led1Pin = 8;       
+const int led2Pn = 9;      
+const int threshold = 100;  
+
+int irSensor1Value = 0;
+int irSensor2Value = 0;
+
+void setup() {
+  pinMode(irSensor1Pin, INPUT);
+  pinMode(irSensor2Pin, INPUT);
+  pinMode(led1Pin, OUTPUT);
+  pinMode(led2Pin, OUTPUT);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  irSensor1Value = analogRead(irSensor1Pin);
+  irSensor2Value = analogRead(irSensor2Pin);
+
+  Serial.print("Sensor 1: ");
+  Serial.print(irSensor1Value);
+  Serial.print(" | Sensor 2: ");
+  Serial.println(irSensor2Value);
+  
+  if (irSensor1Value < threshold) {
+    digitalWrite(led1Pin, HIGH);
+  } else {
+    digitalWrite(led1Pin, LOW);
+  }
+
+  if (irSensor2Value < threshold) {
+    digitalWrite(led2Pin, LOW);
+  } else {
+    digitalWrite(led2Pin, HIGH);
+  }
+  delay(100);
+}
