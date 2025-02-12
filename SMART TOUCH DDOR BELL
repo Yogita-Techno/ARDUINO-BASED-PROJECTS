@@ -1,0 +1,16 @@
+// Pin configuration
+const int touchPin = 12; 
+const int buzzerPin = 13;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(touchPin) == HIGH) {  
+    digitalWrite(buzzerPin, HIGH);     
+    delay(1000);                       
+    digitalWrite(buzzerPin, LOW);      
+  }
+}
