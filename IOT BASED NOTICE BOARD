@@ -1,0 +1,46 @@
+/**
+ * Displays text sent over the serial port (e.g. from the Serial Monitor) on
+ * an attached LCD.
+ */
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 20, 4);
+
+int col = 1;
+
+void setup()
+{
+	lcd.begin();
+	lcd.backlight();
+  
+	Serial.begin(9600);
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
+}
+
+void loop()
+{
+    col =1;
+	if (Serial.available()) {
+		delay(100);
+		// Clear the screen
+		lcd.clear();
+
+		while (Serial.available() > 0) {
+      char str = Serial.read();
+      if(str== '#'){
+        digitalWrite(13, HIGH);
+        delay(5000);
+        digitalWrite(13, LOW);
+        col =1;
+        break;
+      }
+      else if(str==',' && col <4){
+        lcd.setCursor(0, col++);
+      }
+      else{
+			lcd.write(str);
+      }
+		}
+	}
+}
