@@ -1,0 +1,59 @@
+// Pin Configuration
+const int trigPin = 9;           
+const int echoPin = 10;         
+const int vibrationPin = 6;     
+const int buzzerPin = 7;         
+const int waterSensorPin = A0;  
+
+// Threshold values
+const int thresholdDistance = 50;  
+const int waterThreshold = 500;    
+
+// Variables
+long duration;
+long distance;
+int waterLevel;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(vibrationPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+
+ 
+  distance = duration * 0.0344 / 2;  // Speed of sound is 0.0344 cm/µs, divide by 2 for round trip
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (distance <= thresholdDistance) {
+    digitalWrite(buzzerPin, HIGH);     
+    digitalWrite(vibrationPin, HIGH);  
+    Serial.println("Obstacle detected! Buzzer and Vibration ON");
+  } else {
+    digitalWrite(buzzerPin, LOW);     
+    digitalWrite(vibrationPin, LOW);  
+    Serial.println("No Obstacle. Buzzer and Vibration OFF");
+  }
+  waterLevel = analogRead(waterSensorPin);
+
+  Serial.print("Water Level: ");
+  Serial.println(waterLevel);
+  if (waterLevel > waterThreshold) {
+    digitalWrite(buzzerPin, HIGH); 
+    Serial.println("Water detected! Buzzer ON");
+  }
+  delay(200);
+}
