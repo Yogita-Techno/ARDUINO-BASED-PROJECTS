@@ -1,0 +1,32 @@
+// Pin configuration
+const int irSensorPin = 2;    
+const int buzzerPin = 8;      
+const int vibrationPin = 9;   
+
+const int irThreshold = 500;  
+
+void setup() {
+  pinMode(irSensorPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(vibrationPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int irSensorValue = analogRead(irSensorPin);
+  Serial.print("IR Sensor Value: ");
+  Serial.println(irSensorValue);
+  if (irSensorValue > irThreshold) {
+    digitalWrite(buzzerPin, HIGH); 
+    digitalWrite(vibrationPin, HIGH);  
+
+    Serial.println("Obstacle detected! Buzzer and Vibration ON");
+  } else {
+    digitalWrite(buzzerPin, LOW);  
+    digitalWrite(vibrationPin, LOW); 
+    Serial.println("No Obstacle. Buzzer and Vibration OFF");
+  }
+
+  // Delay for a short time before the next reading
+  delay(100);
+}
