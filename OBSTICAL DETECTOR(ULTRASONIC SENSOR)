@@ -1,0 +1,37 @@
+// Pin configuration
+const int trigPin = 9;    
+const int echoPin = 10;   
+const int buzzerPin = 8;  
+const int thresholdDistance = 30;  
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);  
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH); 
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW); 
+
+  
+  long duration = pulseIn(echoPin, HIGH);
+  long distance = duration * 0.0344 / 2;  
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (distance <= thresholdDistance) {
+    digitalWrite(buzzerPin, HIGH);  
+    Serial.println("Obstacle detected! Buzzer ON");
+  } else {
+    digitalWrite(buzzerPin, LOW);  
+    Serial.println("No Obstacle. Buzzer OFF");
+  }
+  delay(500);
+}
