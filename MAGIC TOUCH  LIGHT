@@ -1,0 +1,31 @@
+// Pin configuration
+const int touchPin = 7;       
+const int ledPin = 8;        
+
+bool ledState = false;
+
+void setup() {
+  pinMode(touchPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int touchValue = digitalRead(touchPin);
+  if (touchValue == HIGH) {
+    delay(200);  // Delay for debouncing
+  
+    ledState = !ledState; 
+    
+    digitalWrite(ledPin, ledState ? HIGH : LOW);
+    
+    if (ledState) {
+      Serial.println("LED ON");
+    } else {
+      Serial.println("LED OFF");
+    }
+  }
+  
+  // Small delay to avoid repeated triggering of the touch sensor
+  delay(50);  // Check the touch sensor every 50ms
+}
