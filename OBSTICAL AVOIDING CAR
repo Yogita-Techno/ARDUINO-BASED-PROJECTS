@@ -1,0 +1,114 @@
+// Pin Definitions
+const int trigPin = 10;
+const int echoPin = 11;
+const int motorA1 = 6;
+const int motorA2 = 7;
+const int motorB1 = 8;
+const int motorB2 = 9;
+const int buzzerPin = 3;
+const int ledPin = 12;
+
+long duration;
+int distance;
+char bluetoothCommand;
+
+void setup() {
+  pinMode(motorA1, OUTPUT);
+  pinMode(motorA2, OUTPUT);
+  pinMode(motorB1, OUTPUT);
+  pinMode(motorB2, OUTPUT);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+  
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (Serial.available()) {
+    bluetoothCommand = Serial.read();
+  }
+
+  distance = readUltrasonicDistance();
+
+  if (distance < 20) {
+    stopCar();
+    moveBackward();
+    digitalWrite(buzzerPin, HIGH);  // Turn on buzzer
+    delay(1000);  // Reverse for 1 second
+    stopCar();
+    digitalWrite(buzzerPin, LOW);  // Turn off buzzer
+  } else {
+    if (bluetoothCommand == 'F') {
+      moveForward();
+    } else if (bluetoothCommand == 'B') {
+      moveBackward();
+    } else if (bluetoothCommand == 'L') {
+      turnLeft();
+    } else if (bluetoothCommand == 'R') {
+      turnRight();
+    } else if (bluetoothCommand == 'S') {
+      stopCar();
+    }
+  }
+
+  delay(100);
+}
+
+long readUltrasonicDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;  
+  return distance;
+}
+void moveForward() {
+  digitalWrite(motorA1, HIGH);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
+  digitalWrite(ledPin, HIGH);  
+}
+
+// Function to move the car backward
+void moveBackward() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, HIGH);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, HIGH);
+  digitalWrite(ledPin, HIGH); 
+}
+
+// Function to turn the car left
+void turnLeft() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, HIGH);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
+  digitalWrite(ledPin, HIGH);  
+}
+
+// Function to turn the car right
+void turnRight() {
+  digitalWrite(motorA1, HIGH);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, HIGH);
+  digitalWrite(ledPin, HIGH); 
+}
+
+// Function to stop the car
+void stopCar() {
+  digitalWrite(motorA1, LOW);
+  digitalWrite(motorA2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, LOW);
+  digitalWrite(ledPin, LOW); 
+}
