@@ -1,0 +1,24 @@
+// Pin configuration
+const int soundSensorPin = 7;   
+const int buzzerPin = 8;       
+const int threshold = 500;     
+
+void setup() {
+  pinMode(soundSensorPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int soundLevel = digitalRead(soundSensorPin);
+  Serial.print("Sound Sensor Level: ");
+  Serial.println(soundLevel);
+  if (soundLevel == HIGH) {  
+    digitalWrite(buzzerPin, HIGH);  
+    Serial.println("Noise Detected! Buzzer ON");
+  } else {
+    digitalWrite(buzzerPin, LOW);  
+    Serial.println("No Noise. Buzzer OFF");
+  }
+  delay(100);  
+}
