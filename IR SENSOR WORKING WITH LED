@@ -1,0 +1,26 @@
+// Pin configuration
+const int irSensorPin = 12;  
+const int ledPin = 13;        
+const int threshold = 500;   
+
+void setup() {
+  pinMode(irSensorPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int irValue = analogRead(irSensorPin);
+  
+  Serial.print("IR Sensor Value: ");
+  Serial.println(irValue);
+
+  if (irValue > threshold) {
+    digitalWrite(ledPin, HIGH);  
+    Serial.println("Obstacle Detected! LED ON");
+  } else {
+    digitalWrite(ledPin, LOW);   
+    Serial.println("No Obstacle. LED OFF");
+  }
+  delay(100);
+}
