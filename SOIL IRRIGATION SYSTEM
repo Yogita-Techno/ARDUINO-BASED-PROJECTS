@@ -1,0 +1,64 @@
+#include <DHT.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+#define SOIL_MOISTURE_PIN A0        
+#define RELAY_PIN 7              
+#define DHT_PIN 2                  
+
+DHT dht(DHT_PIN, DHT11);        
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+void setup() {
+  Serial.begin(9600);
+  
+  dht.begin();
+  
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, LOW); 
+  
+  lcd.begin(16, 2);
+  lcd.backlight();
+  
+  lcd.setCursor(0, 0);
+  lcd.print("Soil Irrigation");
+  lcd.setCursor(0, 1);
+  lcd.print("System Active");
+  delay(2000);  
+}
+
+void loop() {
+  int soilMoistureValue = analogRead(SOIL_MOISTURE_PIN);
+  int soilMoisturePercentage = map(soilMoistureValue, 0, 1023, 0, 100); 
+  
+  float temperature = dht.readTemperature(); // Temperature in Celsius
+  
+  if (isnan(temperature)) {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Error reading temp");
+    delay(2000);
+    return;
+  }
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Moisture: ");
+  lcd.print(soilMoisturePercentage);
+  lcd.print("%");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Temp: ");
+  lcd.print(temperature);
+  lcd.print("C");
+  
+  if (soilMoisturePercentage < 40) {
+    digitalWrite(RELAY_PIN, HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print("Watering...       ");
+  } else {
+    digitalWrite(RELAY_PIN, LOW);
+  }
+  
+  delay(2000); 
+}
