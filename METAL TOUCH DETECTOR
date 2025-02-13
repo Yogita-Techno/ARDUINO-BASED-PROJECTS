@@ -1,0 +1,19 @@
+#define TOUCH_SENSOR_PIN 2  
+#define BUZZER_PIN 8       
+
+void setup() {
+  pinMode(TOUCH_SENSOR_PIN, INPUT); 
+  pinMode(BUZZER_PIN, OUTPUT);     
+  Serial.begin(9600); 
+}
+
+void loop() {
+  int touchState = digitalRead(TOUCH_SENSOR_PIN);
+  Serial.println(touchState); 
+  if (touchState == HIGH) {   
+    digitalWrite(BUZZER_PIN, HIGH);  
+  } else {
+    digitalWrite(BUZZER_PIN, LOW);  
+  }
+  delay(100);  
+}
