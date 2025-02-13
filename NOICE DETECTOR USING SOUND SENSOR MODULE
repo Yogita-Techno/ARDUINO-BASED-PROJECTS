@@ -1,0 +1,25 @@
+#define SOUND_SENSOR_PIN 2  
+#define BUZZER_PIN 8       
+
+int threshold = 500;
+int soundValue = 0;  
+
+void setup() {
+  pinMode(SOUND_SENSOR_PIN, INPUT);  
+  pinMode(BUZZER_PIN, OUTPUT);     
+  Serial.begin(9600);  
+}
+
+void loop() {
+  soundValue = digitalRead(SOUND_SENSOR_PIN); 
+  Serial.println(soundValue); 
+  if (soundValue == HIGH) {
+    digitalWrite(BUZZER_PIN, HIGH);  
+    delay(200);  // Buzzer stays on for 200ms
+    digitalWrite(BUZZER_PIN, LOW); 
+  }
+  else {
+    digitalWrite(BUZZER_PIN, LOW);   
+  }
+  delay(100);  
+}
