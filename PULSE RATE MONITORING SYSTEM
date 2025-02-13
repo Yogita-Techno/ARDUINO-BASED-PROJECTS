@@ -1,0 +1,65 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+#define PULSE_PIN A0  // Pin connected to the pulse sensor (Signal pin)
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // LCD I2C address 0x27 and 16x2 size
+
+int pulseValue = 0;      // Variable to store pulse sensor data
+int pulseRate = 0;       // Variable to store calculated pulse rate
+unsigned long lastTime = 0; // Last time pulse value was updated
+unsigned long timeInterval = 1000; // Time interval for calculating pulse rate (1 second)
+int pulseCount = 0; // Variable to count pulse beats
+int threshold = 550; // Threshold for detecting a pulse beat, you might need to adjust this value
+int normalHeartRateMin = 60; // Normal heart rate minimum (beats per minute)
+int normalHeartRateMax = 100; // Normal heart rate maximum (beats per minute)
+
+void setup() {
+  lcd.begin(16, 2);          // Initialize the LCD
+  lcd.backlight();           // Turn on the LCD backlight
+  lcd.setCursor(0, 0);       // Set cursor to the first line
+  lcd.print("Pulse Rate:");   // Display initial message
+
+  pinMode(PULSE_PIN, INPUT); // Set the pulse sensor pin as input
+  Serial.begin(9600);        // Start serial communication for debugging (optional)
+}
+
+void loop() {
+  pulseValue = analogRead(PULSE_PIN);  // Read the pulse sensor value
+  if (pulseValue > threshold) {
+    pulseCount++;  // Count a pulse beat if the value exceeds the threshold
+    delay(10);     // Small delay to avoid multiple counts for one beat
+  }
+
+  // Calculate pulse rate once per second
+  if (millis() - lastTime > timeInterval) {
+    pulseRate = pulseCount * 60;  // Convert pulse count per second to beats per minute (BPM)
+    pulseCount = 0;  // Reset pulse count for next interval
+    lastTime = millis();  // Update the last time
+
+    // Display pulse rate on the LCD
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Pulse Rate: ");
+    lcd.setCursor(0, 1);
+    lcd.print(pulseRate);
+    lcd.print(" BPM");
+
+    // Check if the pulse rate is normal
+    if (pulseRate >= normalHeartRateMin && pulseRate <= normalHeartRateMax) {
+      lcd.setCursor(0, 1);
+      lcd.print("Normal Heart Rate");
+    } else if (pulseRate < normalHeartRateMin) {
+      lcd.setCursor(0, 1);
+      lcd.print("Low Heart Rate");
+    } else {
+      lcd.setCursor(0, 1);
+      lcd.print("High Heart Rate");
+    }
+
+    Serial.print("Pulse Rate: ");
+    Serial.print(pulseRate);
+    Serial.println(" BPM");
+
+  }
+}
